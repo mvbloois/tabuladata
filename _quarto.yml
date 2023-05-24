@@ -1,0 +1,19 @@
+project:
+  type: website
+
+website:
+  title: "Tabula Data"
+  site-url: https://tabuladata.nl
+  description: "This is Martijn van Bloois's personal Blog."
+  navbar:
+    right:
+      - text: Blog
+        href: blog.qmd
+      - icon: github
+        href: https://github.com/mvbloois
+      - icon: twitter
+        href: https://twitter.com/prancke
+
+format:
+  html:
+    theme: theme.scss
