@@ -8,8 +8,8 @@
 <title>Tabula Data</title>
 <link>https://tabuladata.nl/index.html</link>
 <atom:link href="https://tabuladata.nl/index.xml" rel="self" type="application/rss+xml"/>
-<description>This is Martijn van Bloois's personal Blog.</description>
-<generator>quarto-1.1.251</generator>
+<description>This is Martijn van Bloois&#39;s personal Blog.</description>
+<generator>quarto-1.2.335</generator>
 <lastBuildDate>Wed, 31 May 2023 22:00:00 GMT</lastBuildDate>
 <item>
   <title>Map of the Dutch provinces</title>
@@ -152,7 +152,7 @@ Writing 12 features with 4 fields and geometry type Unknown (any).</code></pre>
 </item>
 <item>
   <title>Welcome To My Blog</title>
-  <dc:creator>Tristan O'Malley</dc:creator>
+  <dc:creator>Tristan O&#39;Malley</dc:creator>
   <link>https://tabuladata.nl/posts/welcome/index.html</link>
   <description><![CDATA[ 
 
