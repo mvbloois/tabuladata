@@ -4,6 +4,8 @@ project:
 website:
   title: "Tabula Data"
   site-url: https://tabuladata.nl
+  google-analytics:
+    tracking-id: "G-VQWTWHCTPR"
   description: "This is Martijn van Bloois's personal Blog."
   navbar:
     right:
