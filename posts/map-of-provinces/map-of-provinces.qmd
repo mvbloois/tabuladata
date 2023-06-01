@@ -10,6 +10,10 @@ image: "image.jpg"
 
 Preparing for my upcoming blog post, I require a map showcasing the provinces of the Netherlands. Thankfully, the Dutch Central Bureau for Statistics (CBS) has the data I need. While the 2023 version solely includes the geometries, I will utilize the more comprehensive 2022 version, which offers additional information alongside the geometries.
 
+[Link to the Wijk- en buurtkaart 2022](https://www.cbs.nl/nl-nl/dossier/nederland-regionaal/geografische-data/wijk-en-buurtkaart-2022)
+
+[Link to Gemeentelijke indeling op 1 januari 2022](https://www.cbs.nl/nl-nl/onze-diensten/methoden/classificaties/overig/gemeentelijke-indelingen-per-jaar/indeling-per-jaar/gemeentelijke-indeling-op-1-januari-2022)
+
 ```{r}
 library(tidyverse)
 library(sf)
@@ -99,7 +103,8 @@ Write to map to a shape file for future use.
 
 ```{r}
 new_file <- glue("provincie_{version}.shp")
-st_write(province_map, new_file)
+
+st_write(province_map, new_file, append = FALSE)
 ```
 
 Delete the large downloads.

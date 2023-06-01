@@ -20,6 +20,8 @@
 
 
 <p>Preparing for my upcoming blog post, I require a map showcasing the provinces of the Netherlands. Thankfully, the Dutch Central Bureau for Statistics (CBS) has the data I need. While the 2023 version solely includes the geometries, I will utilize the more comprehensive 2022 version, which offers additional information alongside the geometries.</p>
+<p><a href="https://www.cbs.nl/nl-nl/dossier/nederland-regionaal/geografische-data/wijk-en-buurtkaart-2022">Link to the Wijk- en buurtkaart 2022</a></p>
+<p><a href="https://www.cbs.nl/nl-nl/onze-diensten/methoden/classificaties/overig/gemeentelijke-indelingen-per-jaar/indeling-per-jaar/gemeentelijke-indeling-op-1-januari-2022">Link to Gemeentelijke indeling op 1 januari 2022</a></p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><span class="fu" style="color: #4758AB;">library</span>(tidyverse)</span>
 <span id="cb1-2"><span class="fu" style="color: #4758AB;">library</span>(sf)</span>
@@ -123,9 +125,11 @@ Note
 <p>Write to map to a shape file for future use.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb9" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1">new_file <span class="ot" style="color: #003B4F;">&lt;-</span> <span class="fu" style="color: #4758AB;">glue</span>(<span class="st" style="color: #20794D;">"provincie_{version}.shp"</span>)</span>
-<span id="cb9-2"><span class="fu" style="color: #4758AB;">st_write</span>(province_map, new_file)</span></code></pre></div>
+<span id="cb9-2"></span>
+<span id="cb9-3"><span class="fu" style="color: #4758AB;">st_write</span>(province_map, new_file, <span class="at" style="color: #657422;">append =</span> <span class="cn" style="color: #8f5902;">FALSE</span>)</span></code></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Writing layer `provincie_2022_v1' to data source 
+<pre><code>Deleting layer `provincie_2022_v1' using driver `ESRI Shapefile'
+Writing layer `provincie_2022_v1' to data source 
   `provincie_2022_v1.shp' using driver `ESRI Shapefile'
 Writing 12 features with 4 fields and geometry type Unknown (any).</code></pre>
 </div>
