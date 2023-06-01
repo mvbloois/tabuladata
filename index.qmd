@@ -1,19 +1,13 @@
 ---
-title: "TABULA DATA"
-image: profile.png
-about:
-  template: jolla
-  links:
-    - icon: twitter
-      text: Twitter
-      href: https://twitter.com/prancke
-    - icon: linkedin
-      text: LinkedIn
-      href: https://nl.linkedin.com/in/martijn-van-bloois-b338101
-    - icon: github
-      text: Github
-      href: https://github.com/mvbloois
-
+listing:
+  contents: posts/**/*.qmd
+  sort: "date desc"
+  type: default
+  categories: true
+  sort-ui: true
+  filter-ui: true
+  fields: [date, title, reading-time, description, categories]
+  feed: true
+page-layout: full
+title-block-banner: false
 ---
-
-Personal blog of Martijn van Bloois

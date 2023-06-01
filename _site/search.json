@@ -2,36 +2,43 @@
   {
     "objectID": "index.html",
     "href": "index.html",
-    "title": "TABULA DATA",
+    "title": "Tabula Data",
     "section": "",
-    "text": "Personal blog of Martijn van Bloois"
+    "text": "Order By\n       Default\n         \n          Title\n        \n         \n          Date - Oldest\n        \n         \n          Date - Newest\n        \n     \n  \n    \n      \n      \n    \n\n\n\n\n\n\n\n\n\n\n\n\nmaps\n\n\ncode\n\n\nanalysis\n\n\n\n\n\n\n\n\n\n\n\nJun 1, 2023\n\n\n1 min\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nnews\n\n\n\n\n\n\n\n\n\n\n\nMay 21, 2023\n\n\n0 min\n\n\n\n\n\n\nNo matching items"
   },
   {
     "objectID": "about.html",
     "href": "about.html",
-    "title": "About",
+    "title": "TABULA DATA",
     "section": "",
-    "text": "About this blog"
+    "text": "Personal blog of Martijn van Bloois"
   },
   {
     "objectID": "posts/post-with-code/index.html",
     "href": "posts/post-with-code/index.html",
     "title": "Post With Code",
     "section": "",
-    "text": "This is a post with executable code.\n\n1 + 1\n\n[1] 2"
+    "text": "1 + 1\n\n[1] 2"
   },
   {
     "objectID": "posts/welcome/index.html",
     "href": "posts/welcome/index.html",
     "title": "Welcome To My Blog",
     "section": "",
-    "text": "This is the first post in a Quarto blog. Welcome!\n\nSince this post doesn’t specify an explicit image, the first image in the post will be used in the listing page of posts."
+    "text": "Since this post doesn’t specify an explicit image, the first image in the post will be used in the listing page of posts."
   },
   {
     "objectID": "blog.html",
     "href": "blog.html",
-    "title": "Tabula Data",
+    "title": "TABULA DATA",
     "section": "",
-    "text": "Order By\n       Default\n         \n          Title\n        \n         \n          Date - Oldest\n        \n         \n          Date - Newest\n        \n     \n  \n    \n      \n      \n    \n\n\n\n\n\n\nPost With Code\n\n\n\n\n\n\n\nnews\n\n\ncode\n\n\nanalysis\n\n\n\n\n\n\n\n\n\n\n\nMay 24, 2023\n\n\n0 min\n\n\n\n\n\n\n\n\nWelcome To My Blog\n\n\n\n\n\n\n\nnews\n\n\n\n\n\n\n\n\n\n\n\nMay 21, 2023\n\n\n0 min\n\n\n\n\n\n\nNo matching items"
+    "text": "Personal blog of Martijn van Bloois"
+  },
+  {
+    "objectID": "posts/map-of-provinces/map-of-provinces.html",
+    "href": "posts/map-of-provinces/map-of-provinces.html",
+    "title": "Map of the Dutch provinces",
+    "section": "",
+    "text": "library(tidyverse)\nlibrary(sf)\nlibrary(readxl)\nlibrary(fs)\nlibrary(glue)\n\nI download the shape file with municipalities I can use:\n\nversion <- \"2022_v1\"\nurl_map <- \n  glue(\"https://www.cbs.nl/-/media/cbs/dossiers/nederland-regionaal/wijk-en-buurtstatistieken/wijkbuurtkaart_{version}.zip\")\ndest_file <- glue(\"wijkbuurtkaart_{version}.zip\")\n\ndownload.file(url = url_map,\n              destfile = dest_file)\n\n# Just select the municipality files\nfiles <- unzip(dest_file, list = TRUE) %>% \n  filter(str_detect(Name, \"gemeente_\")) %>%\n  pull(Name)\n\nunzip(dest_file,\n      files = files)\n\nThe municipality file does not contain a field for provinces.\n\nurl_decode <-\n  glue(\"https://www.cbs.nl/-/media/cbs/onze-diensten/methoden/classificaties/overig/gemeenten-alfabetisch-{str_sub(version, 1 ,4)}.xlsx\")\nxls_file <- glue(\"gemeenten-alfabetisch-{str_sub(version, 1 ,4)}.xlsx\")\ndownload.file(url = url_decode,\n              destfile = xls_file,\n              mode = \"wb\")\n\nOnce we have downloaded the required files, we can start:\n\nmunicipalities_2022 <- read_xlsx(xls_file)\n\nmunicipalities_2022\n\n# A tibble: 345 × 6\n   Gemeentecode GemeentecodeGM Gemeentenaam        Provinciecode ProvinciecodePV\n   <chr>        <chr>          <chr>               <chr>         <chr>          \n 1 1680         GM1680         Aa en Hunze         22            PV22           \n 2 0358         GM0358         Aalsmeer            27            PV27           \n 3 0197         GM0197         Aalten              25            PV25           \n 4 0059         GM0059         Achtkarspelen       21            PV21           \n 5 0482         GM0482         Alblasserdam        28            PV28           \n 6 0613         GM0613         Albrandswaard       28            PV28           \n 7 0361         GM0361         Alkmaar             27            PV27           \n 8 0141         GM0141         Almelo              23            PV23           \n 9 0034         GM0034         Almere              24            PV24           \n10 0484         GM0484         Alphen aan den Rijn 28            PV28           \n# ℹ 335 more rows\n# ℹ 1 more variable: Provincienaam <chr>\n\n\nUse st_read from the {sf} package to load the shape file. I exclude the “territorial waters”.\n\nshape_file <- glue(\"./WijkBuurtkaart_{version}/gemeente_{version}.shp\")\n\nmunicipality_map <- st_read(shape_file,\n                            quiet = TRUE) %>% \n  filter(H2O == \"NEE\")\n\n\n\n\n\n\n\nNote\n\n\n\nNote: in 2022 the field is called H2O; in 2023 the field is called WATER.\n\n\nCombine the two files on municipality code. For me the magic happens in the group_by statement that combines the geometries into the new levels.\n\nprovince_map <- municipality_map %>% \n  inner_join(\n    select(municipalities_2022, GemeentecodeGM, Provincienaam),\n    by = join_by(GM_CODE == GemeentecodeGM)\n  ) %>% \n  group_by(Provincienaam) %>% \n  summarise(population = sum(AANT_INW),\n            area = sum(OPP_LAND / 100)) %>% \n  mutate(pop_density = population / area)\n\nPlot the newly made map.\n\nggplot(province_map,\n       aes(fill = pop_density))+\n  geom_sf() +\n  labs(caption = \"Source: Centraal Bureau voor de Statistiek\")\n\n\n\n\nWrite to map to a shape file for future use.\n\nnew_file <- glue(\"provincie_{version}.shp\")\nst_write(province_map, new_file)\n\nWriting layer `provincie_2022_v1' to data source \n  `provincie_2022_v1.shp' using driver `ESRI Shapefile'\nWriting 12 features with 4 fields and geometry type Unknown (any).\n\n\nDelete the large downloads.\n\nfs::dir_delete(glue(\"WijkBuurtkaart_{version}\"))\nfs::file_delete(c(dest_file, xls_file))"
   }
 ]

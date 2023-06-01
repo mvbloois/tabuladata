@@ -1,0 +1,112 @@
+---
+title: "Map of the Dutch provinces"
+author: "Martijn van Bloois"
+date: "2023-06-01"
+execute: 
+  warning: false
+categories: [maps, code, analysis]
+image: "image.jpg"
+---
+
+Preparing for my upcoming blog post, I require a map showcasing the provinces of the Netherlands. Thankfully, the Dutch Central Bureau for Statistics (CBS) has the data I need. While the 2023 version solely includes the geometries, I will utilize the more comprehensive 2022 version, which offers additional information alongside the geometries.
+
+```{r}
+library(tidyverse)
+library(sf)
+library(readxl)
+library(fs)
+library(glue)
+```
+
+
+I download the shape file with municipalities I can use:
+
+```{r}
+version <- "2022_v1"
+url_map <- 
+  glue("https://www.cbs.nl/-/media/cbs/dossiers/nederland-regionaal/wijk-en-buurtstatistieken/wijkbuurtkaart_{version}.zip")
+dest_file <- glue("wijkbuurtkaart_{version}.zip")
+
+download.file(url = url_map,
+              destfile = dest_file)
+
+# Just select the municipality files
+files <- unzip(dest_file, list = TRUE) %>% 
+  filter(str_detect(Name, "gemeente_")) %>%
+  pull(Name)
+
+unzip(dest_file,
+      files = files)
+```
+
+The municipality file does not contain a field for provinces.
+
+```{r}
+url_decode <-
+  glue("https://www.cbs.nl/-/media/cbs/onze-diensten/methoden/classificaties/overig/gemeenten-alfabetisch-{str_sub(version, 1 ,4)}.xlsx")
+xls_file <- glue("gemeenten-alfabetisch-{str_sub(version, 1 ,4)}.xlsx")
+download.file(url = url_decode,
+              destfile = xls_file,
+              mode = "wb")
+```
+
+Once we have downloaded the required files, we can start:
+
+```{r}
+municipalities_2022 <- read_xlsx(xls_file)
+
+municipalities_2022
+```
+
+Use st_read from the {sf} package to load the shape file. I exclude the "territorial waters".
+
+```{r}
+shape_file <- glue("./WijkBuurtkaart_{version}/gemeente_{version}.shp")
+
+municipality_map <- st_read(shape_file,
+                            quiet = TRUE) %>% 
+  filter(H2O == "NEE")
+```
+
+::: {.callout-note}
+Note: in 2022 the field is called H2O; in 2023 the field is called WATER.
+:::
+
+Combine the two files on municipality code. For me the magic happens in the group_by statement that combines the geometries into the new levels.
+
+```{r}
+province_map <- municipality_map %>% 
+  inner_join(
+    select(municipalities_2022, GemeentecodeGM, Provincienaam),
+    by = join_by(GM_CODE == GemeentecodeGM)
+  ) %>% 
+  group_by(Provincienaam) %>% 
+  summarise(population = sum(AANT_INW),
+            area = sum(OPP_LAND / 100)) %>% 
+  mutate(pop_density = population / area)
+```
+
+Plot the newly made map.
+
+```{r}
+ggplot(province_map,
+       aes(fill = pop_density))+
+  geom_sf() +
+  labs(caption = "Source: Centraal Bureau voor de Statistiek")
+```
+
+Write to map to a shape file for future use.
+
+```{r}
+new_file <- glue("provincie_{version}.shp")
+st_write(province_map, new_file)
+```
+
+Delete the large downloads.
+
+```{r}
+fs::dir_delete(glue("WijkBuurtkaart_{version}"))
+fs::file_delete(c(dest_file, xls_file))
+```
+
+

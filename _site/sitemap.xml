@@ -2,18 +2,26 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://tabuladata.nl/blog.html</loc>
-    <lastmod>2023-05-28T11:24:28.570Z</lastmod>
+    <lastmod>2023-06-01T14:23:27.332Z</lastmod>
   </url>
   <url>
     <loc>https://tabuladata.nl/index.html</loc>
-    <lastmod>2023-05-28T11:21:52.853Z</lastmod>
+    <lastmod>2023-06-01T14:26:37.504Z</lastmod>
   </url>
   <url>
     <loc>https://tabuladata.nl/posts/post-with-code/index.html</loc>
-    <lastmod>2023-05-28T11:24:33.880Z</lastmod>
+    <lastmod>2023-06-01T12:08:03.157Z</lastmod>
   </url>
   <url>
     <loc>https://tabuladata.nl/posts/welcome/index.html</loc>
-    <lastmod>2023-05-28T11:12:12.831Z</lastmod>
+    <lastmod>2023-06-01T12:08:04.709Z</lastmod>
+  </url>
+  <url>
+    <loc>https://tabuladata.nl/posts/map-of-provinces/map-of-provinces.html</loc>
+    <lastmod>2023-06-01T14:27:55.711Z</lastmod>
+  </url>
+  <url>
+    <loc>https://tabuladata.nl/about.html</loc>
+    <lastmod>2023-06-01T14:28:12.970Z</lastmod>
   </url>
 </urlset>

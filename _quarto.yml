@@ -7,8 +7,8 @@ website:
   description: "This is Martijn van Bloois's personal Blog."
   navbar:
     right:
-      - text: Blog
-        href: blog.qmd
+      - text: About
+        href: about.qmd
       - icon: github
         href: https://github.com/mvbloois
       - icon: twitter
