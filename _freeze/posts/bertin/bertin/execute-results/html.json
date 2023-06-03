@@ -1,0 +1,16 @@
+{
+  "hash": "dae682d081e8437770feb31d74e77b61",
+  "result": {
+    "markdown": "---\ntitle: \"Bertin's density plot\"\nauthor: \"Martijn van Bloois\"\ndate: \"2023-06-03\"\nexecute: \n warning: false\ncategories: \\[maps, code, analysis\\]\nimage: \"image.jpg\"\n---\n\n\nBenjamin Nowak recently introduced the package {bertin}. The goal of this package is to easily transform choropleth maps into valued points in the way of [Jacques Bertin](https://en.wikipedia.org/wiki/Jacques_Bertin).\n\n![Benjamin's invitation](tweet.png)\n\nTo recreate the map for the Netherlands I followed this [vignette](https://github.com/BjnNowak/bertin)\n\n\n::: {.cell}\n\n```{.r .cell-code}\n# install the package from Github:\n# devtools::install_github(\"bjnnowak/bertin\")\n\n# Install the bertin package and two other useful packages:\nlibrary(bertin)\nlibrary(tidyverse)\nlibrary(sf)\n```\n:::\n\n\nIn a previous post I created a map of the Dutch provinces with population data.\n\n\n::: {.cell}\n\n```{.r .cell-code}\ndutch_provinces <- st_read(\"provincie_2022_v1.shp\",\n                           quiet = TRUE)\n\nhead(dutch_provinces)\n```\n\n::: {.cell-output .cell-output-stdout}\n```\nSimple feature collection with 6 features and 4 fields\nGeometry type: MULTIPOLYGON\nDimension:     XY\nBounding box:  xmin: 118774.2 ymin: 306846.2 xmax: 278026.1 ymax: 619231.6\nProjected CRS: Amersfoort / RD New\n     Prvncnm popultn    area  pp_dnst                       geometry\n1    Drenthe  497743 2632.66 189.0647 MULTIPOLYGON (((219564 5189...\n2  Flevoland  434771 1410.12 308.3220 MULTIPOLYGON (((165434.8 47...\n3    Fryslân  654019 3340.11 195.8076 MULTIPOLYGON (((159366.6 54...\n4 Gelderland 2110472 4960.48 425.4572 MULTIPOLYGON (((201475.6 43...\n5  Groningen  590170 2315.86 254.8384 MULTIPOLYGON (((261245.7 55...\n6    Limburg 1118302 2144.65 521.4380 MULTIPOLYGON (((199181.1 30...\n```\n:::\n:::\n\n\nA quick chloropleth map looks like this:\n\n\n::: {.cell}\n\n```{.r .cell-code}\nggplot(dutch_provinces,\n       aes(fill = pp_dnst)) +\n  geom_sf()\n```\n\n::: {.cell-output-display}\n![](bertin_files/figure-html/unnamed-chunk-3-1.png){width=672}\n:::\n:::\n\n\nFurther following the vignette, we use the make_points() function to create the point valued map.\n\n\n::: {.cell}\n\n```{.r .cell-code}\nprovinces_valued <- make_points(\n  polygon = dutch_provinces, # Input file (sf object)\n  n = 40, # Number of points per side\n  square = TRUE # FALSE makes it hexagonal\n)\n\nggplot(provinces_valued,\n       aes(size = pp_dnst)) +\n  # Keep borders as background\n  geom_sf(\n    data = dutch_provinces,\n    mapping = aes(geometry = geometry),\n    inherit.aes = FALSE\n  ) +\n  geom_sf() +\n  scale_size(range=c(0.5,2)) +\n  theme_minimal()\n```\n\n::: {.cell-output-display}\n![](bertin_files/figure-html/unnamed-chunk-4-1.png){width=672}\n:::\n:::\n\n\nAll-in-all a nice result. I will play around with the parameters to see if I can fill in the islands in the north and southwest a little bit better.\n",
+    "supporting": [
+      "bertin_files"
+    ],
+    "filters": [
+      "rmarkdown/pagebreak.lua"
+    ],
+    "includes": {},
+    "engineDependencies": {},
+    "preserve": {},
+    "postProcess": true
+  }
+}

@@ -2,6 +2,7 @@
   {
     "listing": "/index.html",
     "items": [
+      "/posts/bertin/bertin.html",
       "/posts/map-of-provinces/map-of-provinces.html",
       "/posts/welcome/index.html"
     ]

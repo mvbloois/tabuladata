@@ -6,7 +6,7 @@
   </url>
   <url>
     <loc>https://tabuladata.nl/index.html</loc>
-    <lastmod>2023-06-01T16:25:53.756Z</lastmod>
+    <lastmod>2023-06-03T18:35:02.056Z</lastmod>
   </url>
   <url>
     <loc>https://tabuladata.nl/posts/post-with-code/index.html</loc>
@@ -23,5 +23,9 @@
   <url>
     <loc>https://tabuladata.nl/about.html</loc>
     <lastmod>2023-06-01T16:25:52.623Z</lastmod>
+  </url>
+  <url>
+    <loc>https://tabuladata.nl/posts/bertin/bertin.html</loc>
+    <lastmod>2023-06-03T18:35:01.261Z</lastmod>
   </url>
 </urlset>

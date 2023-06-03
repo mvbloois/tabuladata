@@ -1,0 +1,66 @@
+---
+title: "Bertin's density plot"
+author: "Martijn van Bloois"
+date: "2023-06-03"
+execute: 
+ warning: false
+categories: \[maps, code, analysis\]
+image: "image.jpg"
+---
+
+Benjamin Nowak recently introduced the package {bertin}. The goal of this package is to easily transform choropleth maps into valued points in the way of [Jacques Bertin](https://en.wikipedia.org/wiki/Jacques_Bertin).
+
+![Benjamin's invitation](tweet.png)
+
+To recreate the map for the Netherlands I followed this [vignette](https://github.com/BjnNowak/bertin)
+
+```{r}
+# install the package from Github:
+# devtools::install_github("bjnnowak/bertin")
+
+# Install the bertin package and two other useful packages:
+library(bertin)
+library(tidyverse)
+library(sf)
+```
+
+In a previous post I created a map of the Dutch provinces with population data.
+
+```{r}
+dutch_provinces <- st_read("provincie_2022_v1.shp",
+                           quiet = TRUE)
+
+head(dutch_provinces)
+```
+
+A quick chloropleth map looks like this:
+
+```{r}
+ggplot(dutch_provinces,
+       aes(fill = pp_dnst)) +
+  geom_sf()
+```
+
+Further following the vignette, we use the make_points() function to create the point valued map.
+
+```{r}
+provinces_valued <- make_points(
+  polygon = dutch_provinces, # Input file (sf object)
+  n = 40, # Number of points per side
+  square = TRUE # FALSE makes it hexagonal
+)
+
+ggplot(provinces_valued,
+       aes(size = pp_dnst)) +
+  # Keep borders as background
+  geom_sf(
+    data = dutch_provinces,
+    mapping = aes(geometry = geometry),
+    inherit.aes = FALSE
+  ) +
+  geom_sf() +
+  scale_size(range=c(0.5,2)) +
+  theme_minimal()
+```
+
+All-in-all a nice result. I will play around with the parameters to see if I can fill in the islands in the north and southwest a little bit better.
